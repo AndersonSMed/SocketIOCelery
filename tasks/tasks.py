@@ -5,6 +5,7 @@ import requests
 from mongoengine import connect
 from mongoengine.connection import disconnect
 from flask_socketio import SocketIO
+from datetime import datetime
 
 @shared_task
 def load_from_api():
@@ -22,11 +23,14 @@ def load_from_api():
 
     request = requests.get(url, headers=headers)
 
+    date_fetch = datetime.strptime(datetime.now().strftime('%Y-%m-%d %H:%M'), '%Y-%m-%d %H:%M')
+
     for data in request.json()['streams']:
         
         data['channel'].pop('created_at')
         data['channel'].pop('updated_at')
         data.pop('created_at')
+        data['date_fetch'] = date_fetch
 
         new_stream = models.Stream(**data)
         new_stream.save()
@@ -41,6 +45,6 @@ def emit_ten_viwed():
     )
 
     socketio = SocketIO(message_queue='redis://localhost:6379')
-    socketio.emit('most viwed', models.Stream.objects.order_by('-viewers')[:10].to_json())
+    socketio.emit('most viwed', models.Stream.objects.order_by('-viewers')[:50].to_json())
 
     disconnect()

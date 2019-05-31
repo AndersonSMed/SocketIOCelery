@@ -1,5 +1,4 @@
 import mongoengine
-import datetime
 
 
 class Channel(mongoengine.EmbeddedDocument):
@@ -40,7 +39,7 @@ class Stream(mongoengine.Document):
     average_fps = mongoengine.IntField()
     is_playlist = mongoengine.BooleanField()
     stream_type = mongoengine.StringField()
-    date_fetch = mongoengine.DateTimeField(default=datetime.datetime.utcnow)
+    date_fetch = mongoengine.DateTimeField()
     channel = mongoengine.EmbeddedDocumentField(Channel)
     delay = mongoengine.IntField()
     game = mongoengine.StringField()
