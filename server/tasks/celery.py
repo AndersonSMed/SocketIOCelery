@@ -5,13 +5,9 @@ from mongo import models
 app = Celery('celery', include=['tasks.tasks'])
 
 app.conf.beat_schedule = {
-    'add-every-1-minute': {
+    'add-every-30-seconds': {
         'task': 'tasks.tasks.load_from_api',
-        'schedule': 60.0
-    },
-    'emit-every-10-seconds': {
-        'task': 'tasks.tasks.emit_ten_viwed',
-        'schedule': 10.0
+        'schedule': 15.0
     }
 }
 
